@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import SearchIcon from '@material-ui/icons/Search';
 import Friend from '../../components/Friend';
 import AppMenuBar from '../../components/AppMenuBar';
+import { Alert } from 'reactstrap';
 
 const Main = Styled.div`
   width: 100%;
@@ -89,12 +90,13 @@ class SearchFriend extends Component {
     }
 
     handleSearch = e => {
+        this.setState({error: false});
         const { otherMember, queryName } = this.state;
 
         const result = otherMember.filter(member => member.fname == queryName || member.lname == queryName);
         console.log(result);
 
-        if(result) {
+        if(result.length !== 0) {
             this.setState({
                 searchResult: {
                     status: true,
@@ -109,7 +111,7 @@ class SearchFriend extends Component {
     }
 
     render() {
-        const { searchResult } = this.state;
+        const { searchResult, error } = this.state;
         return(
             <>
             <AppMenuBar />
@@ -121,7 +123,7 @@ class SearchFriend extends Component {
                             type="text"
                             id="query"
                             className="form-control w-75 mr-3"
-                            placeholder="ex. , เอก"
+                            placeholder="ex. Heart, Somchai"
                             onChange={this.handleChangeQuery}
                         />
                         <button
@@ -134,6 +136,11 @@ class SearchFriend extends Component {
                         </button>
                     </div>
                     <div className="mt-5"></div>
+                    {error && (
+                        <Alert color="danger">
+                            ไม่พบผลการค้นหา กรุณาลองคำอื่น
+                      </Alert>
+                    )}
                     <Friend friends={searchResult.res} addFriend={true}></Friend>
                 </Search>
             </Main>

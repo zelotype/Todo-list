@@ -68,9 +68,14 @@ class Friend extends Component {
     handleAddFriend = (newFriend) => {
         const {  member } = this.state
         const friends = member.friendCollection;
-        const updateFriend = [...friends, newFriend];
-        console.log(updateFriend);
-        member.friendCollection = updateFriend;
+
+        if(friends === null) {
+            const updateFriend = [ {}, newFriend ];
+            member.friendCollection = updateFriend;
+        } else {
+            const updateFriend = [...friends, newFriend];
+            member.friendCollection = updateFriend;
+        }
 
         sessionStorage.setItem("userInfo", JSON.stringify(member));
 
