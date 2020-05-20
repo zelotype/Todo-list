@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Styled from 'styled-components';
+import { login } from '../../api/backendApi';
 
 const Main = Styled.div`
   width: 100%;
   height: 100%;
-  background-color: #00cc99;
+  background-color: #F8F9F9;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -39,8 +40,9 @@ class Login extends Component {
       if (!email || !pass) return;
   
       try {
-        // await login(email, pass);
-        // this.setState({ allowRedirect: true });
+        const data = await login(email, pass);
+        sessionStorage.setItem("userInfo", JSON.stringify(data.data.member));
+        this.setState({ allowRedirect: true });
       } catch (error) {
         this.setState({ error: true });
       } finally {

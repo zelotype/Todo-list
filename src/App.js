@@ -1,8 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
-
-import AppMenuBar from './components/AppMenuBar';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
 import PrivateRoute from './PrivatedRoute';
@@ -13,10 +11,10 @@ import Profile from './Pages/Profile';
 import Friend from './Pages/Friends';
 import SearchFriend from './Pages/SearchFriend';
 
+
 function App() {
   return (
     <>
-      <AppMenuBar />
       <Router>
         <Switch>
           <PrivateRoute exact path="/" component={TaskBoard} />

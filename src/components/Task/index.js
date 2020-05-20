@@ -11,13 +11,15 @@ import {
   import { green, red } from '@material-ui/core/colors';
   import { Link } from 'react-router-dom';
   import ConfirmDeleteBox from '../ConfirmDeleteBox';
+  import { deleteTask } from '../../api/backendApi';
 
 class Task extends Component {
     constructor(props){
         super(props);
 
         this.state = {
-            isConfirmDeleteTask : false
+            isConfirmDeleteTask : false,
+            deleteTask: null,
         }
     }
 
@@ -27,8 +29,24 @@ class Task extends Component {
           }));
     }
 
-    handleDeleteTask = e => {
+    handleToggleDeleteTask = (id) => {
+        this.setState({ 
+            deleteTask: id,
+            isConfirmDeleteTask: true,
+         });
+    }
 
+    handleDeleteTask = async () => {
+        const taskId = this.state.deleteTask;
+        const memberId = JSON.parse(sessionStorage.getItem("userInfo")).id;
+        
+        await deleteTask(memberId, taskId);
+        
+        this.setState({
+            deleteTask: null, 
+        });
+
+        window.location.reload(false);
     }
 
     render(){
@@ -54,7 +72,7 @@ class Task extends Component {
                                             </Grid>
                                         )}
                                     </Grid>
-                                    <IconButton onClick={this.toggleConfirmDeleteTask} aria-label="Edit">
+                                    <IconButton onClick={() => this.handleToggleDeleteTask(task.id)} aria-label="Edit">
                                         <DeleteIcon style={{ color: red[500] }} />
                                     </IconButton>
                                 </ExpansionPanelSummary>

@@ -1,33 +1,31 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Task from '../../components/Task';
+import AppMenuBar from '../../components/AppMenuBar';
+import { getAllTask } from '../../api/backendApi';
 
 class TaskBoard extends Component {
     constructor(props) {
         super(props);
     
         this.state = {
-          tasks: [
-              {
-                  id: 1,
-                  name: 'ทำโปรเจค Computer vision',
-                  status: true,
-                  description: 'ยังไม่รู้เลยว่าจะทำอะไรดี',
-              },
-              {
-                id: 2,
-                name: 'ทำ Document',
-                status: false,
-                description: 'ยังไม่รู้เลยว่าจะทำอะไรดี',
-              },
-            ],
+          tasks: []
         };
+    }
+
+    async componentDidMount(){
+        const memberId = JSON.parse(sessionStorage.getItem("userInfo")).id
+        const taskList = await getAllTask(memberId);
+        this.setState({tasks: taskList.data.content});
+        console.log(this.state.tasks);
     }
 
     render(){
         const { tasks } = this.state;
         const { history } = this.props;
         return(
+            <>
+            <AppMenuBar />
             <div className="container pt-3 mt-3">
                 <div className="d-flex flex-row justify-content-between">
                     <h2>งาน</h2>
@@ -42,6 +40,7 @@ class TaskBoard extends Component {
                 <hr />
                 <Task tasks={tasks} />
             </div>
+            </>
         );
     }
 }

@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import Styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 import ImageUploader from '../../components/ImageUploader';
+import { register } from '../../common/register';
 
 const Main = Styled.div`
   width: 100%;
   height: 100%;
-  background-color: #00cc99;
+  background-color: #F8F9F9;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,35 +39,51 @@ class Register extends Component {
 
         this.state = {
             newUser: {
-                firstName: '',
-                lastName: '',
+                fname: '',
+                lname: '',
                 imageUrl: '',
                 email: '',
                 password: ''
-            }
+            },
+            error: false,
+            allowRedirect: false,
         }
     }
 
-    handleChangeFirstName = e => {
+    handleSubmit = async (event) => {
+        event.preventDefault();
+        const { newUser } = this.state;
+        try {
+            await register(newUser);
+            this.setState({allowRedirect: true});
+        } catch(e) {
+            this.setState({
+                error: true,
+            })
+        }
+
+    }
+
+    handleChangefname = e => {
         const value = e.target.value;
 
         this.setState(prevState => ({
         ...prevState,
         newUser: {
             ...prevState.newUser,
-            firstName: value,
+            fname: value,
         },
         }));
     }
 
-    handleChangeLastName = e => {
+    handleChangelname = e => {
         const value = e.target.value;
 
         this.setState(prevState => ({
         ...prevState,
         newUser: {
             ...prevState.newUser,
-            lastName: value,
+            lname: value,
         },
         }));
     }
@@ -105,34 +123,41 @@ class Register extends Component {
     }
 
     render(){
-        const { newUser } = this.state;
+        const { newUser, error, allowRedirect } = this.state;
         const { history } = this.props;
+
+        if (allowRedirect) {
+            return <Redirect to="/" />;
+          }
 
         return(
             <Main>
                 <RegisterForm>
                     <h2 className="text-center font-bold">สมัครสมาชิก</h2>
                     <hr />
+                    {error && (
+                        <p className="text-danger">เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง โปรดลองใหม่อีกครั้ง</p>
+                    )}
                     <form>
                         <div className="row">
                             <div className="form-group col">
-                                <label htmlFor="firstName">ชื่อ</label>
+                                <label htmlFor="fname">ชื่อ</label>
                                 <input
                                     type="text"
-                                    id="firstname"
+                                    id="fname"
                                     className="form-control"
                                     placeholder="ชื่อ"
-                                    onChange={this.handleChangeFirstName}
+                                    onChange={this.handleChangefname}
                                 />
                             </div>
                             <div className="form-group col">
-                                <label htmlFor="lastName">นามสกุล</label>
+                                <label htmlFor="lname">นามสกุล</label>
                                 <input
                                     type="text"
-                                    id="lastName"
+                                    id="lname"
                                     className="form-control"
                                     placeholder="นามสกุล"
-                                    onChange={this.handleChangeLastName}
+                                    onChange={this.handleChangelname}
                                 />
                             </div>
                         </div>
@@ -177,7 +202,7 @@ class Register extends Component {
                                     <button
                                         type="submit"
                                         className="btn btn-primary w-100"
-                                        onClick={this.handleRegister}
+                                        onClick={this.handleSubmit}
                                     >
                                     สมัครสมาชิก
                                     </button>

@@ -1,36 +1,29 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Friend from '../../components/Friend';
+import AppMenuBar from '../../components/AppMenuBar';
 
 class Friends extends Component {      
     constructor(props){
         super(props);
 
         this.state = {
-            friends: [
-                {
-                    id: 1,
-                    firstName: "Anusarn",
-                    lastName: "Tongsuk"
-                },
-                {
-                    id: 2,
-                    firstName: "Chayanin",
-                    lastName: "Lumyong"
-                },
-                {
-                    id: 3,
-                    firstName: "Pannita",
-                    lastName: "Hamego"
-                },
-            ]
+            friends: [],
         }
+    }
+
+    componentDidMount() {
+        const member = JSON.parse(sessionStorage.getItem("userInfo"));
+        const friends = member.friendCollection;
+        this.setState({ friends });
     }
 
     render(){
         const { friends } = this.state;
         const { history } = this.props;
         return(
+            <>
+            <AppMenuBar />
             <div className="container pt-3 mt-3">
                 <div className="d-flex flex-row justify-content-between">
                     <h2>เพื่อน</h2>
@@ -45,6 +38,7 @@ class Friends extends Component {
                 <hr />
                 <Friend friends={friends}></Friend>
             </div>
+            </>
         );
     }
 }

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   Navbar,
   NavbarBrand,
@@ -14,10 +14,16 @@ import Avatar from '@material-ui/core/Avatar';
 
 function AppMenuBar() {
     const [isOpen, setIsOpen] = useState(false);
+    const [userInfo, setUserInfo] = useState({});
+
+    useEffect(() => {
+        setUserInfo(JSON.parse(sessionStorage.getItem("userInfo")));
+    }, [])
 
     const toggleNavbar = useCallback(() => {
         setIsOpen(prev => !prev);
     }, []);
+
     return (
         <Navbar color="light" light expand="md">
             <NavbarBrand href="/">TODO-LIST</NavbarBrand>
@@ -26,10 +32,10 @@ function AppMenuBar() {
                 <Nav navbar className="mr-auto">
                 </Nav>
                 <Nav navbar>
-                    <Avatar alt="Kawisara Bunyen" src="/static/images/avatar/1.jpg" />
+                    <Avatar alt={userInfo.fname} src="/static/images/avatar/1.jpg" />
                     <UncontrolledDropdown nav inNavbar>
                         <DropdownToggle nav caret>
-                            Kawisara  Bunyen
+                            {userInfo.fname} {userInfo.lname}
                         </DropdownToggle>
                         <DropdownMenu right>
                             <DropdownItem href="/profile">
